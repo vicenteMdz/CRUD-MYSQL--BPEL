@@ -3,16 +3,16 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   Oracle JDeveloper BPEL Designer 
   
-  Created: Tue Jan 30 12:14:35 CST 2018
+  Created: Wed Jan 31 11:51:08 CST 2018
   Author:  labso15
   Type: BPEL 2.0 Process
   Purpose: Synchronous BPEL Process
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 -->
 <process name="InventarioProcess"
-               targetNamespace="http://xmlns.oracle.com/Inventario/CRUDInventario/InventarioProcess"
+               targetNamespace="http://xmlns.oracle.com/Inventario/InventarioCRUD/InventarioProcess"
                xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
-               xmlns:client="http://xmlns.oracle.com/Inventario/CRUDInventario/InventarioProcess"
+               xmlns:client="http://xmlns.oracle.com/Inventario/InventarioCRUD/InventarioProcess"
                xmlns:ora="http://schemas.oracle.com/xpath/extension"
                xmlns:ui="http://xmlns.oracle.com/soa/designer"
                xmlns:bpelx="http://schemas.oracle.com/bpel/extension"
@@ -26,9 +26,12 @@
          xmlns:bpm="http://xmlns.oracle.com/bpmn20/extensions" xmlns:ess="http://xmlns.oracle.com/scheduler"
          xmlns:xdk="http://schemas.oracle.com/bpel/extension/xpath/function/xdk"
          xmlns:xref="http://www.oracle.com/XSL/Transform/java/oracle.tip.xref.xpath.XRefXPathFunctions"
-         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap" xmlns:ns1="http://www.example.org">
+         xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap" xmlns:ns1="http://www.example.org"
+         xmlns:ns2="http://xmlns.oracle.com/pcbpel/adapter/db/Inventario/InventarioCRUD/Productos"
+         xmlns:ns3="http://xmlns.oracle.com/pcbpel/adapter/db/top/Productos"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-    <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/Inventario/CRUDInventario/InventarioProcess" location="../WSDLs/InventarioProcess.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/Inventario/InventarioCRUD/InventarioProcess" location="../WSDLs/InventarioProcess.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
     <!-- 
       ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         PARTNERLINKS                                                      
@@ -41,7 +44,8 @@
       used for callback. The location and correlation information associated
       with the client role are automatically set using WS-Addressing.
     -->
-    <partnerLink name="inventarioprocess_service" partnerLinkType="client:InventarioProcess" myRole="InventarioProcessProvider"/>
+    <partnerLink name="inventarioprocess_client" partnerLinkType="client:InventarioProcess" myRole="InventarioProcessProvider"/>
+    <partnerLink name="Productos" partnerLinkType="ns2:Productos_plt" partnerRole="Productos_role"/>
   </partnerLinks>
 
   <!-- 
@@ -56,6 +60,11 @@
 
     <!-- Reference to the message that will be returned to the requester-->
     <variable name="outputVariable" messageType="client:InventarioProcessResponseMessage"/>
+    <variable name="SelectProductosInvoke_ProductosSelect_InputVariable"
+              messageType="ns2:ProductosSelect_inputParameters"/>
+    <variable name="SelectProductosInvoke_ProductosSelect_OutputVariable" messageType="ns2:InventarioCollection_msg"/>
+    <variable name="selectProductosInvoke_InputVariable" messageType="ns2:ProductosSelect_inputParameters"/>
+    <variable name="selectProductosInvoke_OutputVariable" messageType="ns2:InventarioCollection_msg"/>
   </variables>
 
   <!-- 
@@ -68,22 +77,32 @@
   <sequence name="main">
 
     <!-- Receive input from requestor. (Note: This maps to operation defined in InventarioProcess.wsdl) -->
-    <receive name="receiveInput" partnerLink="inventarioprocess_service" portType="client:InventarioProcess" operation="process" variable="inputVariable" createInstance="yes"/>
-    <assign name="Assign1">
+    <receive name="receiveInput" partnerLink="inventarioprocess_client" portType="client:InventarioProcess" operation="process" variable="inputVariable" createInstance="yes"/>
+    <assign name="parametrosSelectAsign">
       <copy>
-        <from>concat('El producto ::: ', $inputVariable.payload/ns1:nombreProducto, ' ha sido recibido exitosamentye.')</from>
-        <to>$outputVariable.payload/ns1:detalle</to>
+        <from>$inputVariable.payload/ns1:codigoProducto</from>
+        <to>$selectProductosInvoke_InputVariable.ProductosSelect_inputParameters/ns3:codigoProducto</to>
+      </copy>
+    </assign>
+    <invoke name="SelectProductosInvoke" partnerLink="Productos"
+            portType="ns2:Productos_ptt" operation="ProductosSelect"
+            inputVariable="selectProductosInvoke_InputVariable" outputVariable="selectProductosInvoke_OutputVariable"
+            bpelx:invokeAsDetail="no"/>
+    <assign name="DetalleRespuestaAsign">
+      <copy>
+        <from>'0'</from>
+        <to>$outputVariable.payload/ns1:codigo</to>
       </copy>
       <copy>
         <from>'OK'</from>
         <to>$outputVariable.payload/ns1:descripcion</to>
       </copy>
       <copy>
-        <from>'0'</from>
-        <to>$outputVariable.payload/ns1:codigo</to>
+        <from>concat('El producto ', $inputVariable.payload/ns1:nombreProducto, ' ha sido recibido y su precio actual es ', $selectProductosInvoke_OutputVariable.InventarioCollection/ns3:Inventario/ns3:precio)</from>
+        <to>$outputVariable.payload/ns1:detalle</to>
       </copy>
     </assign>
     <!-- Generate reply to synchronous request -->
-    <reply name="replyOutput" partnerLink="inventarioprocess_service" portType="client:InventarioProcess" operation="process" variable="outputVariable"/>
+    <reply name="replyOutput" partnerLink="inventarioprocess_client" portType="client:InventarioProcess" operation="process" variable="outputVariable"/>
   </sequence>
 </process>

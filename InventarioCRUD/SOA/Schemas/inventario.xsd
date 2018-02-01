@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.example.org"
             targetNamespace="http://www.example.org" elementFormDefault="qualified">
- 
   <!-- Tipo complejo que representa los datos del objeto de entrada para el BPEL de inventario -->
   <xsd:complexType name="InventarioRequest">
     <xsd:sequence>
@@ -25,5 +24,4 @@
  
   <!-- Elemento que representa el objeto de respuesta del BPEL de inventario -->
   <xsd:element name="inventarioResponse" type="InventarioResponse"/>
-  
 </xsd:schema>

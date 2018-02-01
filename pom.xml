@@ -7,6 +7,6 @@
     <packaging>pom</packaging>
     <modules>
         <!-- Add project modules -->
-    	<module>CRUDInventario</module>
+    	<module>InventarioCRUD</module>
     </modules>
 </project>

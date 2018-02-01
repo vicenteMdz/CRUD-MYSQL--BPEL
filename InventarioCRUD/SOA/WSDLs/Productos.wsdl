@@ -1,0 +1,32 @@
+<wsdl:definitions
+     name="Productos"
+     targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/db/Inventario/InventarioCRUD/Productos"
+     xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/db/Inventario/InventarioCRUD/Productos"
+     xmlns:jca="http://xmlns.oracle.com/pcbpel/wsdl/jca/"
+     xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+     xmlns:top="http://xmlns.oracle.com/pcbpel/adapter/db/top/Productos"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    >
+  <plt:partnerLinkType name="Productos_plt" >
+    <plt:role name="Productos_role" >
+      <plt:portType name="tns:Productos_ptt" />
+    </plt:role>
+  </plt:partnerLinkType>
+    <wsdl:types>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema" >
+        <import namespace="http://xmlns.oracle.com/pcbpel/adapter/db/top/Productos" schemaLocation="../Schemas/Productos_table.xsd" />
+      </schema>
+    </wsdl:types>
+    <wsdl:message name="ProductosSelect_inputParameters">
+        <wsdl:part name="ProductosSelect_inputParameters" element="top:ProductosSelect_codigoProductoInputParameters"/>
+    </wsdl:message>
+    <wsdl:message name="InventarioCollection_msg">
+        <wsdl:part name="InventarioCollection" element="top:InventarioCollection"/>
+    </wsdl:message>
+    <wsdl:portType name="Productos_ptt">
+        <wsdl:operation name="ProductosSelect">
+            <wsdl:input message="tns:ProductosSelect_inputParameters"/>
+            <wsdl:output message="tns:InventarioCollection_msg"/>
+        </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>

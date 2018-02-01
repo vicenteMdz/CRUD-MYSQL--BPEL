@@ -1,0 +1,14 @@
+<adapter-config name="Productos" adapter="db" wsdlLocation="../WSDLs/Productos.wsdl" xmlns="http://platform.integration.oracle/blocks/adapter/fw/metadata">
+  
+  <connection-factory UIConnectionName="BDlocal" location="eis/DB/BDlocal"/>
+  <endpoint-interaction portType="Productos_ptt" operation="ProductosSelect">
+    <interaction-spec className="oracle.tip.adapter.db.DBReadInteractionSpec">
+      <property name="DescriptorName" value="Productos.Inventario"/>
+      <property name="QueryName" value="ProductosSelect"/>
+      <property name="MappingsMetaDataURL" value="Productos-or-mappings.xml"/>
+      <property name="ReturnSingleResultSet" value="false"/>
+      <property name="GetActiveUnitOfWork" value="false"/>
+    </interaction-spec>
+  </endpoint-interaction>
+
+</adapter-config>

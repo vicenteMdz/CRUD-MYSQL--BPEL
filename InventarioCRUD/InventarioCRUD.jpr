@@ -65,7 +65,7 @@
       <string v="oracle.tip.tools.ide.ess.addin.ESSContentSetProvider/ess-content"/>
       <string v="oracle.sb.tooling.ide.core.projects.SbProjectSettings/sbContentSet"/>
    </list>
-   <value n="defaultPackage" v="edu.unsis.soa.bpel"/>
+   <value n="defaultPackage" v="inventariocrud"/>
    <hash n="oracle.ide.model.TechnologyScopeConfiguration">
       <list n="technologyScope">
          <string v="Maven"/>
@@ -108,7 +108,7 @@
    </hash>
    <hash n="oracle.jdeveloper.deploy.dt.DeploymentProfiles">
       <hash n="profileDefinitions">
-         <hash n="CRUDInventarioComposite">
+         <hash n="InventarioComposite">
             <hash n="archiveOptions">
                <value n="hasManifest" v="false"/>
             </hash>
@@ -183,21 +183,21 @@
                   </hash>
                </list>
             </hash>
-            <url n="jarURL" path="deploy/sca_CRUDInventarioComposite${composite.revision_id}.jar"/>
+            <url n="jarURL" path="deploy/sca_InventarioComposite${composite.revision_id}.jar"/>
             <value n="profileClass" v="oracle.tip.tools.ide.fabric.deploy.sar.SarProfile"/>
-            <value n="profileName" v="CRUDInventarioComposite"/>
+            <value n="profileName" v="InventarioComposite"/>
          </hash>
       </hash>
       <list n="profileList">
-         <string v="CRUDInventarioComposite"/>
+         <string v="InventarioComposite"/>
       </list>
    </hash>
    <hash n="oracle.jdeveloper.maven.compiler.MavenConfiguration">
       <url n="pomfileURL" path="pom.xml"/>
    </hash>
    <hash n="oracle.jdeveloper.model.J2eeSettings">
-      <value n="j2eeWebAppName" v="Inventario-CRUDInventario-webapp"/>
-      <value n="j2eeWebContextRoot" v="Inventario-CRUDInventario-context-root"/>
+      <value n="j2eeWebAppName" v="Inventario-InventarioCRUD-webapp"/>
+      <value n="j2eeWebContextRoot" v="Inventario-InventarioCRUD-context-root"/>
    </hash>
    <hash n="oracle.jdeveloper.model.PathsConfiguration">
       <hash n="javaContentSet">
