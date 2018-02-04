@@ -7,9 +7,13 @@
       <xsd:element name="codigoProducto" type="xsd:string"/>
       <xsd:element name="nombreProducto" type="xsd:string"/>
       <xsd:element name="categoria" type="xsd:string"/>
+      <xsd:element name="fechaAlta" type="xsd:string"/>
+      <xsd:element name="descripcion" type="xsd:string"/>
+      <xsd:element name="categoria" type="xsd:string"/>
+      <xsd:element name="Precio" type="xsd:string"/>
+      <xsd:element name="Operacion" type="xsd:string"/>
     </xsd:sequence>
   </xsd:complexType>
-
   <!-- Tipo complejo que representa los datos del objeto de respuesta del BPEL de inventario -->
   <xsd:complexType name="InventarioResponse">
     <xsd:sequence>
@@ -17,11 +21,9 @@
       <xsd:element name="descripcion" type="xsd:string"/>
       <xsd:element name="detalle" type="xsd:string"/>
     </xsd:sequence>
-  </xsd:complexType> 
-  
+  </xsd:complexType>
   <!-- Elemento que representa el objeto de entrada para el BPEL de inventario -->
   <xsd:element name="inventarioRequest" type="InventarioRequest"/>
- 
   <!-- Elemento que representa el objeto de respuesta del BPEL de inventario -->
   <xsd:element name="inventarioResponse" type="InventarioResponse"/>
 </xsd:schema>

@@ -29,7 +29,12 @@
          xmlns:ldap="http://schemas.oracle.com/xpath/extension/ldap" xmlns:ns1="http://www.example.org"
          xmlns:ns2="http://xmlns.oracle.com/pcbpel/adapter/db/Inventario/InventarioCRUD/Productos"
          xmlns:ns3="http://xmlns.oracle.com/pcbpel/adapter/db/top/Productos"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:ns4="http://xmlns.oracle.com/pcbpel/adapter/db/Inventario/InventarioCRUD/insertProducto"
+         xmlns:ns5="http://xmlns.oracle.com/pcbpel/adapter/db/top/insertProducto"
+         xmlns:ns6="http://xmlns.oracle.com/pcbpel/adapter/db/Inventario/InventarioCRUD/updateProducto"
+         xmlns:ns7="http://xmlns.oracle.com/pcbpel/adapter/db/top/Update"
+         xmlns:ns8="http://xmlns.oracle.com/pcbpel/adapter/db/Inventario/InventarioCRUD/deleteProducto">
 
     <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/Inventario/InventarioCRUD/InventarioProcess" location="../WSDLs/InventarioProcess.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
     <!-- 
@@ -46,6 +51,9 @@
     -->
     <partnerLink name="inventarioprocess_client" partnerLinkType="client:InventarioProcess" myRole="InventarioProcessProvider"/>
     <partnerLink name="Productos" partnerLinkType="ns2:Productos_plt" partnerRole="Productos_role"/>
+    <partnerLink name="insertProducto" partnerLinkType="ns4:insertProducto_plt" partnerRole="insertProducto_role"/>
+    <partnerLink name="updateProducto" partnerLinkType="ns6:updateProducto_plt" partnerRole="updateProducto_role"/>
+    <partnerLink name="deleteProducto" partnerLinkType="ns8:deleteProducto_plt" partnerRole="deleteProducto_role"/>
   </partnerLinks>
 
   <!-- 
@@ -65,6 +73,10 @@
     <variable name="SelectProductosInvoke_ProductosSelect_OutputVariable" messageType="ns2:InventarioCollection_msg"/>
     <variable name="selectProductosInvoke_InputVariable" messageType="ns2:ProductosSelect_inputParameters"/>
     <variable name="selectProductosInvoke_OutputVariable" messageType="ns2:InventarioCollection_msg"/>
+    <variable name="insert_InputVariable" messageType="ns4:InventarioCollection_msg"/>
+    <variable name="insert_OutputVariable" messageType="ns4:InventarioCollection_msg"/>
+    <variable name="update_InputVariable" messageType="ns6:InventarioCollection_msg"/>
+    <variable name="delete_InputVariable" messageType="ns8:InventarioCollection_msg"/>
   </variables>
 
   <!-- 
@@ -78,16 +90,108 @@
 
     <!-- Receive input from requestor. (Note: This maps to operation defined in InventarioProcess.wsdl) -->
     <receive name="receiveInput" partnerLink="inventarioprocess_client" portType="client:InventarioProcess" operation="process" variable="inputVariable" createInstance="yes"/>
-    <assign name="parametrosSelectAsign">
-      <copy>
-        <from>$inputVariable.payload/ns1:codigoProducto</from>
-        <to>$selectProductosInvoke_InputVariable.ProductosSelect_inputParameters/ns3:codigoProducto</to>
-      </copy>
-    </assign>
-    <invoke name="SelectProductosInvoke" partnerLink="Productos"
-            portType="ns2:Productos_ptt" operation="ProductosSelect"
-            inputVariable="selectProductosInvoke_InputVariable" outputVariable="selectProductosInvoke_OutputVariable"
-            bpelx:invokeAsDetail="no"/>
+    <if name="If1">
+      <documentation>
+        <![CDATA[Create]]>
+      </documentation>
+      <condition>$inputVariable.payload/ns1:Operacion = 'C'</condition>
+      <sequence>
+        <assign name="ParametrosInsert">
+          <copy>
+            <from>$inputVariable.payload/ns1:codigoProducto</from>
+            <to>$insert_InputVariable.InventarioCollection/ns5:Inventario/ns5:codigoProducto</to>
+          </copy>
+          <copy>
+            <from>$inputVariable.payload/ns1:nombreProducto</from>
+            <to>$insert_InputVariable.InventarioCollection/ns5:Inventario/ns5:nombre</to>
+          </copy>
+          <copy>
+            <from>$inputVariable.payload/ns1:categoria</from>
+            <to>$insert_InputVariable.InventarioCollection/ns5:Inventario/ns5:categoria</to>
+          </copy>
+          <copy>
+            <from>$inputVariable.payload/ns1:fechaAlta</from>
+            <to>$insert_InputVariable.InventarioCollection/ns5:Inventario/ns5:fechaAlta</to>
+          </copy>
+          <copy>
+            <from>$inputVariable.payload/ns1:descripcion</from>
+            <to>$insert_InputVariable.InventarioCollection/ns5:Inventario/ns5:descripcion</to>
+          </copy>
+          <copy>
+            <from>$inputVariable.payload/ns1:Precio</from>
+            <to>$insert_InputVariable.InventarioCollection/ns5:Inventario/ns5:precio</to>
+          </copy>
+        </assign>
+        <invoke name="invokeInsertws" partnerLink="insertProducto" portType="ns4:insertProducto_ptt" operation="insert"
+                inputVariable="insert_InputVariable" outputVariable="insert_OutputVariable" bpelx:invokeAsDetail="no"/>
+      </sequence>
+      <else>
+        <if name="If2">
+          <documentation>
+            <![CDATA[Update]]>
+          </documentation>
+          <condition>$inputVariable.payload/ns1:Operacion = 'U'</condition>
+          <sequence>
+            <assign name="ParametrosUpdate">
+              <copy>
+                <from>$inputVariable.payload/ns1:codigoProducto</from>
+                <to>$update_InputVariable.InventarioCollection/ns7:Inventario/ns7:codigoProducto</to>
+              </copy>
+              <copy>
+                <from>$inputVariable.payload/ns1:nombreProducto</from>
+                <to>$update_InputVariable.InventarioCollection/ns7:Inventario/ns7:nombre</to>
+              </copy>
+              <copy>
+                <from>$inputVariable.payload/ns1:categoria</from>
+                <to>$update_InputVariable.InventarioCollection/ns7:Inventario/ns7:categoria</to>
+              </copy>
+              <copy>
+                <from>$inputVariable.payload/ns1:fechaAlta</from>
+                <to>$update_InputVariable.InventarioCollection/ns7:Inventario/ns7:fechaAlta</to>
+              </copy>
+              <copy>
+                <from>$inputVariable.payload/ns1:descripcion</from>
+                <to>$update_InputVariable.InventarioCollection/ns7:Inventario/ns7:descripcion</to>
+              </copy>
+              <copy>
+                <from>$inputVariable.payload/ns1:Precio</from>
+                <to>$update_InputVariable.InventarioCollection/ns7:Inventario/ns7:precio</to>
+              </copy>
+            </assign>
+            <invoke name="invokeUpdate" partnerLink="updateProducto" portType="ns6:updateProducto_ptt"
+                    operation="update" inputVariable="update_InputVariable" bpelx:invokeAsDetail="no"/>
+          </sequence>
+          <else>
+            <if name="If3">
+              <documentation>
+                <![CDATA[Delete]]>
+              </documentation>
+              <condition>$inputVariable.payload/ns1:Operacion = 'D'</condition>
+              <invoke name="invokeDelete" bpelx:invokeAsDetail="no" partnerLink="deleteProducto"
+                      portType="ns8:deleteProducto_ptt" operation="delete" inputVariable="delete_InputVariable"/>
+              <else>
+                <documentation>
+                  <![CDATA[Select]]>
+                </documentation>
+                <sequence>
+                  <sequence>
+                    <assign name="parametrosSelectAsign">
+                      <copy>
+                        <from>$inputVariable.payload/ns1:codigoProducto</from>
+                        <to>$selectProductosInvoke_InputVariable.ProductosSelect_inputParameters/ns3:codigoProducto</to>
+                      </copy>
+                    </assign>
+                    <invoke name="SelectProductosInvoke" partnerLink="Productos" portType="ns2:Productos_ptt"
+                            operation="ProductosSelect" inputVariable="selectProductosInvoke_InputVariable"
+                            outputVariable="selectProductosInvoke_OutputVariable" bpelx:invokeAsDetail="no"/>
+                  </sequence>
+                </sequence>
+              </else>
+            </if>
+          </else>
+        </if>
+      </else>
+    </if>
     <assign name="DetalleRespuestaAsign">
       <copy>
         <from>'0'</from>

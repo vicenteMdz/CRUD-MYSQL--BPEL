@@ -1,0 +1,25 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<xs:schema targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/db/top/Update" xmlns="http://xmlns.oracle.com/pcbpel/adapter/db/top/Update" elementFormDefault="qualified" attributeFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+   <xs:element name="InventarioCollection" type="InventarioCollection"/>
+   <xs:complexType name="InventarioCollection">
+      <xs:sequence>
+         <xs:element name="Inventario" type="Inventario" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:complexType name="Inventario">
+      <xs:sequence>
+         <xs:element name="id" type="xs:int" nillable="true"/>
+         <xs:element name="codigoProducto" type="string255" minOccurs="0"/>
+         <xs:element name="nombre" type="string255" minOccurs="0"/>
+         <xs:element name="descripcion" type="string255" minOccurs="0" nillable="true"/>
+         <xs:element name="fechaAlta" type="string255" minOccurs="0" nillable="true"/>
+         <xs:element name="categoria" type="string255" minOccurs="0"/>
+         <xs:element name="precio" type="string255" minOccurs="0"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:simpleType name="string255">
+      <xs:restriction base="xs:string">
+         <xs:maxLength value="255"/>
+      </xs:restriction>
+   </xs:simpleType>
+</xs:schema>

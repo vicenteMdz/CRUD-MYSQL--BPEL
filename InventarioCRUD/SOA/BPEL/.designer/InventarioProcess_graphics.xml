@@ -4,12 +4,19 @@
    <annotationfile/>
    <iconize/>
    <partnerlink_locations>
-      <partnerlink name="inventarioprocess_client" x="0" y="283" side="left"/>
-      <partnerlink name="Productos" x="1203" y="284" side="right"/>
+      <partnerlink name="inventarioprocess_client" x="0" y="624" side="left"/>
+      <partnerlink name="deleteProducto" x="0" y="567" side="left"/>
+      <partnerlink name="Productos" x="1166" y="715" side="right"/>
+      <partnerlink name="updateProducto" x="1166" y="547" side="right"/>
+      <partnerlink name="insertProducto" x="1166" y="418" side="right"/>
    </partnerlink_locations>
-   <graph_layout viewport="0,0,1319,518" show_swimlanes="true">
+   <graph_layout viewport="7,172,1269,835" show_swimlanes="true">
       <layout_item collapsed="false" xpath="/process" type="process" showhandlers="true"/>
       <layout_item collapsed="false" xpath="/process/sequence" type="sequence"/>
+      <layout_item collapsed="false" xpath="/process/sequence/if/sequence" type="sequence"/>
+      <layout_item collapsed="false" xpath="/process/sequence/if/else/if/sequence" type="sequence"/>
+      <layout_item collapsed="false" xpath="/process/sequence/if/else/if/else/if/else/sequence" type="sequence"/>
+      <layout_item collapsed="false" xpath="/process/sequence/if/else/if/else/if/else/sequence/sequence" type="sequence"/>
    </graph_layout>
    <bookmarks/>
 </graphics>

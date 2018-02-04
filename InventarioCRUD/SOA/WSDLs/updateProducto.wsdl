@@ -1,0 +1,28 @@
+<wsdl:definitions
+     name="updateProducto"
+     targetNamespace="http://xmlns.oracle.com/pcbpel/adapter/db/Inventario/InventarioCRUD/updateProducto"
+     xmlns:tns="http://xmlns.oracle.com/pcbpel/adapter/db/Inventario/InventarioCRUD/updateProducto"
+     xmlns:jca="http://xmlns.oracle.com/pcbpel/wsdl/jca/"
+     xmlns:plt="http://schemas.xmlsoap.org/ws/2003/05/partner-link/"
+     xmlns:top="http://xmlns.oracle.com/pcbpel/adapter/db/top/Update"
+     xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    >
+  <plt:partnerLinkType name="updateProducto_plt" >
+    <plt:role name="updateProducto_role" >
+      <plt:portType name="tns:updateProducto_ptt" />
+    </plt:role>
+  </plt:partnerLinkType>
+    <wsdl:types>
+      <schema xmlns="http://www.w3.org/2001/XMLSchema" >
+        <import namespace="http://xmlns.oracle.com/pcbpel/adapter/db/top/Update" schemaLocation="../Schemas/updateProducto_table.xsd" />
+      </schema>
+    </wsdl:types>
+    <wsdl:message name="InventarioCollection_msg">
+        <wsdl:part name="InventarioCollection" element="top:InventarioCollection"/>
+    </wsdl:message>
+    <wsdl:portType name="updateProducto_ptt">
+        <wsdl:operation name="update">
+            <wsdl:input message="tns:InventarioCollection_msg"/>
+        </wsdl:operation>
+    </wsdl:portType>
+</wsdl:definitions>
