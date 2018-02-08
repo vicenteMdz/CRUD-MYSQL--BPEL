@@ -4,6 +4,7 @@
   <!-- Tipo complejo que representa los datos del objeto de entrada para el BPEL de inventario -->
   <xsd:complexType name="InventarioRequest">
     <xsd:sequence>
+    <xsd:element name="id" type="xsd:int"/>
       <xsd:element name="codigoProducto" type="xsd:string"/>
       <xsd:element name="nombreProducto" type="xsd:string"/>
       <xsd:element name="categoria" type="xsd:string"/>

@@ -34,7 +34,8 @@
          xmlns:ns5="http://xmlns.oracle.com/pcbpel/adapter/db/top/insertProducto"
          xmlns:ns6="http://xmlns.oracle.com/pcbpel/adapter/db/Inventario/InventarioCRUD/updateProducto"
          xmlns:ns7="http://xmlns.oracle.com/pcbpel/adapter/db/top/Update"
-         xmlns:ns8="http://xmlns.oracle.com/pcbpel/adapter/db/Inventario/InventarioCRUD/deleteProducto">
+         xmlns:ns8="http://xmlns.oracle.com/pcbpel/adapter/db/Inventario/InventarioCRUD/deleteProducto"
+         xmlns:ns9="http://xmlns.oracle.com/pcbpel/adapter/db/top/deleteProducto">
 
     <import ui:processWSDL="true" namespace="http://xmlns.oracle.com/Inventario/InventarioCRUD/InventarioProcess" location="../WSDLs/InventarioProcess.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
     <!-- 
@@ -138,6 +139,10 @@
                 <to>$update_InputVariable.InventarioCollection/ns7:Inventario/ns7:codigoProducto</to>
               </copy>
               <copy>
+                <from>$inputVariable.payload/ns1:id</from>
+                <to>$update_InputVariable.InventarioCollection/ns7:Inventario/ns7:id</to>
+              </copy>
+              <copy>
                 <from>$inputVariable.payload/ns1:nombreProducto</from>
                 <to>$update_InputVariable.InventarioCollection/ns7:Inventario/ns7:nombre</to>
               </copy>
@@ -167,8 +172,16 @@
                 <![CDATA[Delete]]>
               </documentation>
               <condition>$inputVariable.payload/ns1:Operacion = 'D'</condition>
-              <invoke name="invokeDelete" bpelx:invokeAsDetail="no" partnerLink="deleteProducto"
-                      portType="ns8:deleteProducto_ptt" operation="delete" inputVariable="delete_InputVariable"/>
+              <sequence name="Sequence1">
+                <assign name="Assign1">
+                  <copy>
+                    <from>$inputVariable.payload/ns1:id</from>
+                    <to>$delete_InputVariable.InventarioCollection/ns9:Inventario/ns9:id</to>
+                  </copy>
+                </assign>
+                <invoke name="invokeDelete" bpelx:invokeAsDetail="no" partnerLink="deleteProducto"
+                        portType="ns8:deleteProducto_ptt" operation="delete" inputVariable="delete_InputVariable"/>
+              </sequence>
               <else>
                 <documentation>
                   <![CDATA[Select]]>
